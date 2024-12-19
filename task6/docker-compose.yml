@@ -1,0 +1,32 @@
+services:
+  frontend:
+    image: softy-pinko-front-end
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "9000"
+    depends_on:
+      backend:
+        condition: service_started
+
+  backend:
+    image: softy-pinko-back-end
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    ports:
+      - "5252"
+
+  proxy:
+    image: softy-pinko-proxy
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
